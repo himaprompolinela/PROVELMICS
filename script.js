@@ -437,7 +437,7 @@ function buildShell(){
     <div class="music-head">
       <div class="music-now">
         <div class="music-pulse paused" id="musicPulse"></div>
-        <span class="music-now-label">NOW PLAYING</span>
+        <span class="music-now-label">SARAN GUA SAMBIL DENGER INI LANGSUNG DI SPOTIFY BRAY</span>
       </div>
       <div class="music-btns">
         <button class="m-btn" id="mPrev"><i class="fa-solid fa-backward-step"></i></button>
