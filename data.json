@@ -1,0 +1,6 @@
+{
+  "note": "File ini hanya dokumentasi struktur data.",
+  "actual_data": "Data asli ada di STORIES_DATA dan AUTHORS_DATA dalam script.js",
+  "reason": "Data inline agar app bisa dibuka tanpa server (file:// protocol tidak bisa fetch)",
+  "how_to_add": "Edit array STORIES_DATA / AUTHORS_DATA di script.js untuk menambah konten"
+}
