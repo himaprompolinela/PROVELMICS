@@ -771,10 +771,52 @@ function updateMusicUI(){const player=el('musicPlayer'),ifw=el('musicIframe'),pm
    AUTHORS
 ════════════════════════ */
 function goAuthors(){
-  const pg=el('page-authors');
-  pg.innerHTML=`<div class="container"><div class="page-head"><div class="page-eyebrow">◆ CREATORS</div><h1 class="page-heading">Our Authors</h1><p class="page-sub">Para kreator di balik cerita favoritmu</p></div><div class="author-grid">${S.authors.map(a=>{const r=getEffectiveRating('author',a.id);return`<div class="author-card" data-aid="${a.id}"><div class="author-card-avatar"><img src="${a.photo}" alt="${a.penName}" loading="lazy"/></div><div class="author-card-pen">${a.penName}</div><div class="author-card-real">${a.realName}</div><div class="author-card-stars">★ ${r.average} · ${r.votes} votes</div></div>`;}).join('')}</div></div>`;
-  qsa('.author-card',pg).forEach(c=>c.addEventListener('click',()=>{const a=S.authors.find(x=>x.id===c.dataset.aid);if(a)goAuthorDetail(a);}));
+  const pg = el('page-authors');
+
   showView('authors');
+
+  pg.innerHTML=`
+  <div class="container">
+
+    <div class="page-head">
+
+      <button id="backBtnAuthors" class="icon-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="page-eyebrow">◆ CREATORS</div>
+      <h1 class="page-heading">Our Authors</h1>
+      <p class="page-sub">Para kreator di balik cerita favoritmu</p>
+    </div>
+
+    <div class="author-grid">
+      ${S.authors.map(a=>{
+        const r=getEffectiveRating('author',a.id);
+        return `
+        <div class="author-card" data-aid="${a.id}">
+          <div class="author-card-avatar">
+            <img src="${a.photo}" alt="${a.penName}" loading="lazy"/>
+          </div>
+          <div class="author-card-pen">${a.penName}</div>
+          <div class="author-card-real">${a.realName}</div>
+          <div class="author-card-stars">★ ${r.average} · ${r.votes} votes</div>
+        </div>`;
+      }).join('')}
+    </div>
+
+  </div>`;
+
+  // 🔥 tombol kembali (INI YANG SEBELUMNYA KURANG / SALAH)
+  el('backBtnAuthors').addEventListener('click', () => {
+    renderHome();
+    showView('home');
+  });
+
+  // event author
+  qsa('.author-card',pg).forEach(c=>c.addEventListener('click',()=>{
+    const a=S.authors.find(x=>x.id===c.dataset.aid);
+    if(a)goAuthorDetail(a);
+  }));
 }
 
 function goAuthorDetail(author){
@@ -815,29 +857,175 @@ function goAuthorDetail(author){
 ════════════════════════ */
 function goGenre(g){
   if(g)S.activeGenre=g;
-  const genres=getAllGenres(),active=S.activeGenre||genres[0];
-  const filtered=S.stories.filter(s=>s.genre.map(x=>x.toLowerCase()).includes(active.toLowerCase()));
+  const genres=getAllGenres(),
+  active=S.activeGenre||genres[0];
+
+  const filtered=S.stories.filter(s=>
+    s.genre.map(x=>x.toLowerCase()).includes(active.toLowerCase())
+  );
+
   const pg=el('page-genre');
-  pg.innerHTML=`<div class="container"><div class="page-head"><div class="page-eyebrow">◆ BROWSE</div><h1 class="page-heading">Genre</h1></div><div class="genre-chips">${genres.map(x=>`<button class="genre-chip-btn ${x===active?'active':''}" data-genre="${x}">${x}</button>`).join('')}</div><div class="sec-head"><div class="sec-title-wrap"><span class="sec-eyebrow">◆ RESULTS</span><h2 class="sec-title">${active}</h2></div><span class="sec-count">${filtered.length} titles</span></div><div class="card-grid" id="genreGrid">${filtered.length?filtered.map(buildCard).join(''):'<div class="empty"><i class="fa-regular fa-compass"></i><p>No stories.</p></div>'}</div></div>`;
-  qsa('.genre-chip-btn',pg).forEach(b=>b.addEventListener('click',()=>goGenre(b.dataset.genre)));
-  attachCardClicks(pg);
+
   showView('genre');
+
+  pg.innerHTML=`
+  <div class="container">
+
+    <div class="page-head">
+
+      <!-- 🔥 BACK BUTTON -->
+      <button id="backBtnGenre" class="icon-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="page-eyebrow">◆ BROWSE</div>
+      <h1 class="page-heading">Genre</h1>
+    </div>
+
+    <div class="genre-chips">
+      ${genres.map(x=>`
+        <button class="genre-chip-btn ${x===active?'active':''}" data-genre="${x}">
+          ${x}
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-title-wrap">
+        <span class="sec-eyebrow">◆ RESULTS</span>
+        <h2 class="sec-title">${active}</h2>
+      </div>
+      <span class="sec-count">${filtered.length} titles</span>
+    </div>
+
+    <div class="card-grid" id="genreGrid">
+      ${
+        filtered.length
+        ? filtered.map(buildCard).join('')
+        : `<div class="empty">
+            <i class="fa-regular fa-compass"></i>
+            <p>No stories.</p>
+          </div>`
+      }
+    </div>
+
+  </div>`;
+
+  // 🔥 tombol kembali
+  el('backBtnGenre').addEventListener('click', () => {
+    renderHome();
+    showView('home');
+  });
+
+  // klik genre
+  qsa('.genre-chip-btn',pg).forEach(b=>
+    b.addEventListener('click',()=>goGenre(b.dataset.genre))
+  );
+
+  // klik card
+  attachCardClicks(pg);
 }
 
 function goBookmarks(){
   const items=S.stories.filter(s=>S.bookmarks.has(s.id));
   const pg=el('page-bookmarks');
-  pg.innerHTML=`<div class="container"><div class="page-head"><div class="page-eyebrow">◆ SAVED</div><h1 class="page-heading">Bookmarks</h1><p class="page-sub">${items.length} cerita tersimpan</p></div><div class="card-grid">${items.length?items.map(buildCard).join(''):'<div class="empty"><i class="fa-regular fa-bookmark"></i><p>Belum ada bookmark.</p></div>'}</div></div>`;
-  attachCardClicks(pg);
+
   showView('bookmarks');
+
+  pg.innerHTML=`
+  <div class="container">
+
+    <div class="page-head">
+
+      <!-- 🔥 BACK BUTTON -->
+      <button id="backBtnBookmarks" class="icon-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="page-eyebrow">◆ SAVED</div>
+      <h1 class="page-heading">Bookmarks</h1>
+      <p class="page-sub">${items.length} cerita tersimpan</p>
+    </div>
+
+    <div class="card-grid">
+      ${
+        items.length
+        ? items.map(buildCard).join('')
+        : `<div class="empty">
+            <i class="fa-regular fa-bookmark"></i>
+            <p>Belum ada bookmark.</p>
+          </div>`
+      }
+    </div>
+
+  </div>`;
+
+  // 🔥 tombol kembali
+  el('backBtnBookmarks').addEventListener('click', () => {
+    renderHome();
+    showView('home');
+  });
+
+  // klik card
+  attachCardClicks(pg);
 }
 
 function goRatings(){
   const sorted=[...S.stories].sort((a,b)=>getEffectiveRating('story',b.id).average-getEffectiveRating('story',a.id).average);
   const pg=el('page-ratings');
-  pg.innerHTML=`<div class="container"><div class="page-head"><div class="page-eyebrow">◆ LEADERBOARD</div><h1 class="page-heading">Top Rated</h1><p class="page-sub">Cerita terbaik berdasarkan suara pembaca</p></div>${sorted.map((s,i)=>{const r=getEffectiveRating('story',s.id),auth=getAuthor(s.authorId);return`<div class="top-rating-item" data-id="${s.id}"><div class="top-rank ${i===0?'gold-rank':''}">#${i+1}</div><div class="top-cover"><img src="${s.cover}" alt="${s.title}" loading="lazy"/></div><div class="top-info"><div class="top-title">${s.title}</div><div class="top-author">${auth?auth.penName:''} · ${s.type} · ${s.status}</div><div class="top-stars">★ ${r.average} <span style="color:var(--text-3);font-weight:400">(${r.votes} votes)</span></div></div><i class="fa-solid fa-chevron-right" style="color:var(--accent)"></i></div>`;}).join('')}</div>`;
-  qsa('.top-rating-item',pg).forEach(item=>item.addEventListener('click',()=>{const s=S.stories.find(x=>x.id===item.dataset.id);if(s)goDetail(s);}));
+
   showView('ratings');
+
+  pg.innerHTML=`
+  <div class="container">
+
+    <div class="page-head">
+
+      <!-- 🔥 BACK BUTTON -->
+      <button id="backBtnRatings" class="icon-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <div class="page-eyebrow">◆ LEADERBOARD</div>
+      <h1 class="page-heading">Top Rated</h1>
+      <p class="page-sub">Cerita terbaik berdasarkan suara pembaca</p>
+    </div>
+
+    ${sorted.map((s,i)=>{
+      const r=getEffectiveRating('story',s.id),
+      auth=getAuthor(s.authorId);
+      return `
+      <div class="top-rating-item" data-id="${s.id}">
+        <div class="top-rank ${i===0?'gold-rank':''}">#${i+1}</div>
+        <div class="top-cover">
+          <img src="${s.cover}" alt="${s.title}" loading="lazy"/>
+        </div>
+        <div class="top-info">
+          <div class="top-title">${s.title}</div>
+          <div class="top-author">${auth?auth.penName:''} · ${s.type} · ${s.status}</div>
+          <div class="top-stars">★ ${r.average} 
+            <span style="color:var(--text-3);font-weight:400">
+              (${r.votes} votes)
+            </span>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="color:var(--accent)"></i>
+      </div>`;
+    }).join('')}
+
+  </div>`;
+
+  // 🔥 tombol kembali
+  el('backBtnRatings').addEventListener('click', () => {
+    renderHome();
+    showView('home');
+  });
+
+  // klik item
+  qsa('.top-rating-item',pg).forEach(item=>item.addEventListener('click',()=>{
+    const s=S.stories.find(x=>x.id===item.dataset.id);
+    if(s)goDetail(s);
+  }));
 }
 
 function goSearch(query){
@@ -848,7 +1036,6 @@ function goSearch(query){
   attachCardClicks(pg);
   showView('search');
 }
-
 /* ════════════════════════
    DRAWER
 ════════════════════════ */
