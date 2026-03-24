@@ -11,7 +11,8 @@
 const AUTHORS_DATA = [
   { id:'a1', realName:'Okta',  penName:'Heart Broker', photo:'https://picsum.photos/seed/auth1/200/200', bio:'Komikus visioner yang terinspirasi sains fiksi klasik. Setiap panel karyanya seperti foto dari galaksi yang belum pernah ada.', rating:{ average:4.7, votes:180 } },
   { id:'a2', realName:'OpenAI',   penName:'chatgpt',   photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/960px-ChatGPT_logo.svg.png', bio:'Novelis dengan kepekaan emosional luar biasa. Karyanya hidup dari detail kecil yang orang lain lewatkan.', rating:{ average:4.9, votes:320 } },
-  { id:'a3', realName:'Galuh Ayudya Pratiwi', penName:'Vale',   photo:'https://picsum.photos/seed/auth3/200/200', bio:'Maestro cyberpunk Indonesia. Worldbuilding-nya rapi, action-nya membara, linework-nya tak tertandingi.', rating:{ average:4.5, votes:210 } }
+  { id:'a3', realName:'...', penName:'...',   photo:'https://picsum.photos/seed/auth3/200/200', bio:'Maestro cyberpunk Indonesia. Worldbuilding-nya rapi, action-nya membara, linework-nya tak tertandingi.', rating:{ average:4.5, votes:210 } },
+  { id:'a4', realName:'Galuh Ayudya Pratiwi', penName:'Vale',   photo:'https://picsum.photos/seed/auth3/200/200', bio:'empty', rating:{ average:0, votes:0 } },
 ];
 
 /* ════════════════════════
